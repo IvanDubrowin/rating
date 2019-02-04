@@ -9,14 +9,14 @@
           <div>
             <label style="font-size: 18px; color: black;" for="employees_choices">Выбор КС</label>
           </div>
-          {{ render_field(cs.employees_choices) }}
+          {{ render_field(form.employees_choices) }}
         </div>
       </div>
       <div class="row">
         <div class="input-field col s3">
           <p class="range-field">
-            <label style="font-size: 18px; color: black;" for="pos_weight">Вес POS: {{ cs.pos_weight.default }}%</label>
-            {{ render_field(cs.pos_weight) }}
+            <label style="font-size: 18px; color: black;" for="pos_weight">Вес POS: {{ form.pos_weight.default }}%</label>
+            {{ render_field(form.pos_weight) }}
             <script type="text/javascript">
               $("#pos_weight").click(function() {
                 var weight = $(this).val();
@@ -27,8 +27,8 @@
         </div>
         <div class="input-field col s3">
           <p class="range-field">
-            <label style="font-size: 18px; color: black;" for="nps_weight">Вес NPS: {{ cs.nps_weight.default }}%</label>
-            {{ render_field(cs.nps_weight) }}
+            <label style="font-size: 18px; color: black;" for="nps_weight">Вес NPS: {{ form.nps_weight.default }}%</label>
+            {{ render_field(form.nps_weight) }}
             <script type="text/javascript">
               $("#nps_weight").click(function() {
                 var weight = $(this).val();
@@ -39,8 +39,8 @@
         </div>
         <div class="input-field col s3">
           <p class="range-field">
-            <label style="font-size: 18px; color: black;" for="fz_weight">Вес ФЗ: {{ cs.fz_weight.default }}%</label>
-            {{ render_field(cs.fz_weight) }}
+            <label style="font-size: 18px; color: black;" for="fz_weight">Вес ФЗ: {{ form.fz_weight.default }}%</label>
+            {{ render_field(form.fz_weight) }}
             <script type="text/javascript">
               $("#fz_weight").click(function() {
                 var weight = $(this).val();
@@ -51,8 +51,8 @@
         </div>
         <div class="input-field col s3">
           <p class="range-field">
-            <label style="font-size: 18px; color: black;" for="refund_fz_weight">Вес Возврат ФЗ: {{ cs.refund_fz_weight.default }}%</label>
-            {{ render_field(cs.refund_fz_weight) }}
+            <label style="font-size: 18px; color: black;" for="refund_fz_weight">Вес Возврат ФЗ: {{ form.refund_fz_weight.default }}%</label>
+            {{ render_field(form.refund_fz_weight) }}
             <script type="text/javascript">
               $("#refund_fz_weight").click(function() {
                 var weight = $(this).val();
@@ -65,8 +65,8 @@
       <div class="row">
           <div class="input-field col s3">
             <p class="range-field">
-              <label style="font-size: 18px; color: black;" for="sms_weight">Вес SMS: {{ cs.sms_weight.default }}%</label>
-              {{ render_field(cs.sms_weight) }}
+              <label style="font-size: 18px; color: black;" for="sms_weight">Вес SMS: {{ form.sms_weight.default }}%</label>
+              {{ render_field(form.sms_weight) }}
               <script type="text/javascript">
                 $("#sms_weight").click(function() {
                   var weight = $(this).val();
@@ -77,8 +77,8 @@
           </div>
           <div class="input-field col s3">
             <p class="range-field">
-              <label style="font-size: 18px; color: black;" for="kr_weight">Вес Карта Свобода: {{ cs.kr_weight.default }}%</label>
-              {{ render_field(cs.kr_weight) }}
+              <label style="font-size: 18px; color: black;" for="kr_weight">Вес Карта Свобода: {{ form.kr_weight.default }}%</label>
+              {{ render_field(form.kr_weight) }}
               <script type="text/javascript">
                 $("#kr_weight").click(function() {
                   var weight = $(this).val();
@@ -89,8 +89,8 @@
           </div>
           <div class="input-field col s3">
             <p class="range-field">
-              <label style="font-size: 18px; color: black;" for="box_weight">Вес BOX: {{ cs.box_weight.default }}%</label>
-              {{ render_field(cs.box_weight) }}
+              <label style="font-size: 18px; color: black;" for="box_weight">Вес BOX: {{ form.box_weight.default }}%</label>
+              {{ render_field(form.box_weight) }}
               <script type="text/javascript">
                 $("#box_weight").click(function() {
                   var weight = $(this).val();
@@ -101,8 +101,8 @@
           </div>
           <div class="input-field col s3">
             <p class="range-field">
-              <label style="font-size: 18px; color: black;" for="ops_weight">Вес ОПС: {{ cs.ops_weight.default }}%</label>
-              {{ render_field(cs.ops_weight) }}
+              <label style="font-size: 18px; color: black;" for="ops_weight">Вес ОПС: {{ form.ops_weight.default }}%</label>
+              {{ render_field(form.ops_weight) }}
               <script type="text/javascript">
                 $("#ops_weight").click(function() {
                   var weight = $(this).val();
@@ -122,7 +122,7 @@
           <div class="input-field col s2">
           </div>
           <div class="input-field col s10">
-              {{ render_field(cs.submit) }}
+              {{ render_field(form.submit) }}
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           </div>
           <div class="input-field col s2">

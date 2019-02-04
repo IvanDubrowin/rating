@@ -152,7 +152,7 @@ class AddCSForm(FlaskForm):
 
 
 class CreateRatingForm(FlaskForm):
-    employees_choices = SelectMultipleField('Выбор КС', choices=[])
+    employees_choices = SelectMultipleField('Выбор КС', choices=[], coerce=int)
     pos_weight = IntegerRangeField('Вес POS', default=35, render_kw={"min": 0, "max": 100})
     nps_weight = IntegerRangeField('Вес NPS', default=9, render_kw={"min": 0, "max": 100})
     fz_weight = IntegerRangeField('Вес ФЗ', default=15, render_kw={"min": 0, "max": 100})

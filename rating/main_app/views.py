@@ -1,7 +1,7 @@
 from flask import render_template, redirect, session, url_for, request, g, jsonify
 from flask_login import login_required, login_user, logout_user, current_user
 from main_app import app, db
-from .models import User, CS
+from .models import User, CS, Rating
 from .forms import LoginForm, RegistrationForm, AddCSForm, CreateRatingForm
 
 @app.route('/')
@@ -113,15 +113,30 @@ def delete_cs():
 @app.route('/create_rating', methods=['GET', 'POST'])
 @login_required
 def create_rating():
-    choices_cs_form = CreateRatingForm()
-    choices_cs_form.employees_choices.choices =[
+    form = CreateRatingForm()
+    form.employees_choices.choices =[
         (x.id, x.fio) for x in CS.query.filter_by(user_id=current_user.get_id()).all()
         ]
-    if choices_cs_form.validate_on_submit():
-        pass
-    return render_template('create_rating.html', cs=choices_cs_form)
+    if form.validate_on_submit():
+        employees = [CS.query.filter_by(id=cs).first() for cs in form.employees_choices.data]
+        rating = Rating.create(
+            pos_weight=form.pos_weight.data,
+            nps_weight=form.nps_weight.data,
+            fz_weight=form.fz_weight.data,
+            refund_fz_weight=form.refund_fz_weight.data,
+            sms_weight=form.sms_weight.data,
+            kr_weight=form.kr_weight.data,
+            box_weight=form.box_weight.data,
+            ops_weight=form.ops_weight.data,
+            user_id=current_user.get_id(),
+            employees=employees)
+        return redirect(url_for('rating', id=rating.id))
+    return render_template('create_rating.html', form=form)
 
-@app.route('/rating', methods=['GET', 'POST'])
+@app.route('/rating/<id>', methods=['GET', 'POST'])
 @login_required
-def rating():
-    return render_template('rating.html')
+def rating(id):
+    rating = Rating.query.filter_by(id=id, user_id=current_user.get_id()).first()
+    if rating is not None:
+        return render_template('rating.html')
+    return redirect(url_for('index'))

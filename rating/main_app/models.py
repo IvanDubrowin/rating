@@ -33,6 +33,11 @@ class CRUDMixin():
             db.session.commit()
 
 
+class Association(db.Model, CRUDMixin):
+    employee = db.Column(db.Integer, db.ForeignKey('employees.id', ondelete='cascade'), primary_key=True)
+    rating = db.Column(db.Integer, db.ForeignKey('ratings.id', ondelete='cascade'), primary_key=True)
+
+
 class User(db.Model, UserMixin, CRUDMixin):
     __tablename__ = 'users'
 
@@ -79,6 +84,7 @@ class CS(db.Model, CRUDMixin):
     ops_plan = db.Column(db.Integer, nullable=False)
     ops_fact = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    rating = db.relationship('Rating', secondary='association', back_populates='employees')
 
     def __repr__(self):
         return f'{self.last_name} {self.first_name} {self.middle_name}'
@@ -142,3 +148,19 @@ class CS(db.Model, CRUDMixin):
     @property
     def fio(self):
         return f'{self.last_name} {self.first_name} {self.middle_name}'
+
+
+class Rating(db.Model, CRUDMixin):
+    __tablename__ = 'ratings'
+
+    id = db.Column(db.Integer, primary_key=True)
+    pos_weight = db.Column(db.Integer, nullable=False)
+    nps_weight = db.Column(db.Integer, nullable=False)
+    fz_weight = db.Column(db.Integer, nullable=False)
+    refund_fz_weight = db.Column(db.Integer, nullable=False)
+    sms_weight = db.Column(db.Integer, nullable=False)
+    kr_weight = db.Column(db.Integer, nullable=False)
+    box_weight = db.Column(db.Integer, nullable=False)
+    ops_weight = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    employees = db.relationship('CS', secondary='association', back_populates='rating')
