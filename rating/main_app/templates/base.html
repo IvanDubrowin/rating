@@ -1,0 +1,69 @@
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+	<title>Рейтинг</title>
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+	<script type="text/javascript">
+		var csrftoken = $('meta[name=csrf-token]').attr('content')
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+					if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
+							xhr.setRequestHeader("X-CSRFToken", csrftoken)
+					}
+			}
+		})
+	</script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<style>
+    body {
+        background:url({{ url_for('static', filename='images/bg.png') }});
+    }
+  </style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+		<i id="logo" class="large material-icons">insert_chart</i>
+		<a>Рейтинг</a>
+		<div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+			<ul class="navbar ml-auto">
+				{% if current_user.is_authenticated %}
+				<li class="nav-item">
+		    	<a id="name" class="waves-effect waves-light btn"><i class="material-icons left">person</i>{{ current_user.username }}</a>
+		  	</li>
+				<li class="nav-item">
+		    	<a class="waves-effect waves-light btn" href="{{ url_for('index') }}"><i class="material-icons left">home</i>На главную</a>
+		  	</li>
+				<li class="nav-item">
+		    	<a class="waves-effect waves-light btn" href="{{ url_for('logout') }}"><i class="material-icons left">close</i>Выйти</a>
+		  	</li>
+				{% else %}
+		  	<li class="nav-item">
+		    	<a class="waves-effect waves-light btn" href="{{ url_for('login') }}"><i class="material-icons left">vpn_key</i>Вход</a>
+		  	</li>
+		  	<li class="nav-item">
+		    	<a class="waves-effect waves-light btn" href="{{ url_for('register') }}"><i class="material-icons left">person_add</i>Регистрация</a>
+		  	</li>
+				{% endif %}
+			</ul>
+		</div>
+	</nav>
+	<main>
+		<div id="block-content" class="container-fluid">
+				{% block content %}
+				{% endblock %}
+		</div>
+	</main>
+	<script type="text/javascript">
+	$(document).ready(function() {
+			M.updateTextFields();
+		});
+	</script>
+	<footer id="footer" class="top-space"></footer>
+</body>
+</html>

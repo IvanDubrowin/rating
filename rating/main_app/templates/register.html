@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+<div class="container">
+  <div class="login-page">
+    <form class="form" method="POST">
+      <div class="row">
+        <div class="input-field col s12">
+          <label style="font-size: 18px; color: black;" for="username">Логин</label>
+          {{ render_field(form.username) }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label style="font-size: 18px; color: black;" for="password">Пароль</label>
+          {{ render_field(form.password) }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label style="font-size: 18px; color: black;" for="password2">Подтвердите пароль</label>
+          {{ render_field(form.password2) }}
+        </div>
+      </div>
+      <div class="row">
+        {{ render_field(form.submit) }}
+        {{ render_field(form.csrf_token) }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

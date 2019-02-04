@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+<div class="employees-form">
+  <div class="row">
+    <div class="col s12">
+      {% if items %}
+      <table class="highlight centered">
+        <thead>
+          <tr>
+              <th>ФИО</th>
+              <th>POS</th>
+              <th>NPS</th>
+              <th>Отказ от ФЗ</th>
+              <th>ФЗ</th>
+              <th>SMS</th>
+              <th>Карта Свобода</th>
+              <th>BOX</th>
+              <th>ОПС</th>
+              <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items.items %}
+          <tr id="row_{{ item.id }}">
+            <td>{{ item.last_name }} {{ item.first_name }} {{ item.middle_name }}</td>
+            <td>{{ item.pos_fact }} из {{ item.pos_plan }}</td>
+            <td>{{ item.nps_fact }}% из {{ item.nps_plan }}%</td>
+            <td>{% if item.refund_fz == True %}
+                  Да
+                {% else %}
+                  Нет
+                {% endif %}
+            </td>
+            <td>{{ item.fz_fact }}% из {{ item.fz_plan }}%</td>
+            <td>{{ item.sms_fact }}% из {{ item.sms_plan }}%</td>
+            <td>{{ item.kr_fact }} из {{ item.kr_plan }}</td>
+            <td>{{ item.box_fact }} из {{ item.box_plan }}</td>
+            <td>{{ item.ops_fact }} из {{ item.ops_plan }}</td>
+            <td>
+                <a class="btn-floating btn-large waves-effect waves-light green" href="{{ url_for('edit_cs', id=item.id) }}">
+                  <i class="material-icons right">edit</i>
+                </a>
+            </td>
+            <td>
+              <button id="delete_cs_{{ item.id }}" class="btn-floating btn-large waves-effect waves-light red">
+                <i class="material-icons right">clear</i>
+              </button>
+              <script type="text/javascript">
+                $("#delete_cs_{{ item.id }}").click(function(){
+                  $.ajax({
+                    type: 'POST',
+                    url: "{{ url_for('delete_cs') }}",
+                    data: {cs_id: {{ item.id }}},
+                    dataType: "json",
+                    success: function(){
+                      $("#row_{{ item.id }}").remove();
+                    }
+                  });
+              });
+              </script>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+    <h3>Нет записей</h3>
+  {% endif %}
+  <div class="row">
+    <div class="col s12">
+      <form action="{{ url_for('add_cs') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button class="btn waves-effect waves-light large" type="submit" name="action">Добавить КС
+          <i class="material-icons right">add</i>
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <ul class="pagination">
+        {% if items.has_prev %}
+          <li class="waves-effect"><a href="{{ url_for('employees', page=items.has_prev) }}"><i class="material-icons">chevron_left</i></a></li>
+        {% endif %}
+        {% if items.pages <= 1 %}
+        {% else %}
+        {% for page_num in items.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+          {% if page_num %}
+            {% if items.page == page_num %}
+              <li class="active"><a href="{{ url_for('employees', page=page_num) }}">{{ page_num }}</a></li>
+            {% else %}
+              <li class="waves-effect"><a href="{{ url_for('employees', page=page_num) }}">{{ page_num }}</a></li>
+            {% endif %}
+          {% else %}
+          {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% if items.has_next %}
+          <li class="waves-effect"><a href="{{ url_for('employees', page=items.has_next) }}"><i class="material-icons">chevron_right</i></a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

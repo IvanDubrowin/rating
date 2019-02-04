@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+<div class="container">
+  <div class="employees-form" style="text-align: left;">
+    <form method="POST">
+      <div class="row">
+        <div class="input-field col s10">
+          <div>
+            <label style="font-size: 18px; color: black;" for="employees_choices">Выбор КС</label>
+          </div>
+          {{ render_field(cs.employees_choices) }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s3">
+          <p class="range-field">
+            <label style="font-size: 18px; color: black;" for="pos_weight">Вес POS: {{ cs.pos_weight.default }}%</label>
+            {{ render_field(cs.pos_weight) }}
+            <script type="text/javascript">
+              $("#pos_weight").click(function() {
+                var weight = $(this).val();
+                $("label[for='pos_weight']").text('Вес POS: ' + weight + '%');
+              });
+            </script>
+          </p>
+        </div>
+        <div class="input-field col s3">
+          <p class="range-field">
+            <label style="font-size: 18px; color: black;" for="nps_weight">Вес NPS: {{ cs.nps_weight.default }}%</label>
+            {{ render_field(cs.nps_weight) }}
+            <script type="text/javascript">
+              $("#nps_weight").click(function() {
+                var weight = $(this).val();
+                $("label[for='nps_weight']").text('Вес NPS: ' + weight + '%');
+              });
+            </script>
+          </p>
+        </div>
+        <div class="input-field col s3">
+          <p class="range-field">
+            <label style="font-size: 18px; color: black;" for="fz_weight">Вес ФЗ: {{ cs.fz_weight.default }}%</label>
+            {{ render_field(cs.fz_weight) }}
+            <script type="text/javascript">
+              $("#fz_weight").click(function() {
+                var weight = $(this).val();
+                $("label[for='fz_weight']").text('Вес ФЗ: ' + weight + '%');
+              });
+            </script>
+          </p>
+        </div>
+        <div class="input-field col s3">
+          <p class="range-field">
+            <label style="font-size: 18px; color: black;" for="refund_fz_weight">Вес Возврат ФЗ: {{ cs.refund_fz_weight.default }}%</label>
+            {{ render_field(cs.refund_fz_weight) }}
+            <script type="text/javascript">
+              $("#refund_fz_weight").click(function() {
+                var weight = $(this).val();
+                $("label[for='refund_fz_weight']").text('Вес Возврат ФЗ: ' + weight + '%');
+              });
+            </script>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+          <div class="input-field col s3">
+            <p class="range-field">
+              <label style="font-size: 18px; color: black;" for="sms_weight">Вес SMS: {{ cs.sms_weight.default }}%</label>
+              {{ render_field(cs.sms_weight) }}
+              <script type="text/javascript">
+                $("#sms_weight").click(function() {
+                  var weight = $(this).val();
+                  $("label[for='sms_weight']").text('Вес SMS: ' + weight + '%');
+                });
+              </script>
+            </p>
+          </div>
+          <div class="input-field col s3">
+            <p class="range-field">
+              <label style="font-size: 18px; color: black;" for="kr_weight">Вес Карта Свобода: {{ cs.kr_weight.default }}%</label>
+              {{ render_field(cs.kr_weight) }}
+              <script type="text/javascript">
+                $("#kr_weight").click(function() {
+                  var weight = $(this).val();
+                  $("label[for='kr_weight']").text('Вес Карта Свобода: ' + weight + '%');
+                });
+              </script>
+            </p>
+          </div>
+          <div class="input-field col s3">
+            <p class="range-field">
+              <label style="font-size: 18px; color: black;" for="box_weight">Вес BOX: {{ cs.box_weight.default }}%</label>
+              {{ render_field(cs.box_weight) }}
+              <script type="text/javascript">
+                $("#box_weight").click(function() {
+                  var weight = $(this).val();
+                  $("label[for='box_weight']").text('Вес BOX: ' + weight + '%');
+                });
+              </script>
+            </p>
+          </div>
+          <div class="input-field col s3">
+            <p class="range-field">
+              <label style="font-size: 18px; color: black;" for="ops_weight">Вес ОПС: {{ cs.ops_weight.default }}%</label>
+              {{ render_field(cs.ops_weight) }}
+              <script type="text/javascript">
+                $("#ops_weight").click(function() {
+                  var weight = $(this).val();
+                  $("label[for='ops_weight']").text('Вес ОПС: ' + weight + '%');
+                });
+              </script>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s10">
+            <p id="total">Общий вес: 100 из 100%</p>
+            <p id="validate-weight" style="color: red; display: none;">Значение должно быть равно 100%</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s2">
+          </div>
+          <div class="input-field col s10">
+              {{ render_field(cs.submit) }}
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          </div>
+          <div class="input-field col s2">
+          </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var options = document.querySelectorAll('option');
+    var instances = M.FormSelect.init(elems, options);
+  });
+  $(document).ready(function(){
+    $('select').formSelect();
+  });
+  var array_of_dom_elements = document.querySelectorAll("input[type=range]");
+  M.Range.init(array_of_dom_elements);
+  var weights = [
+    "#pos_weight",
+    "#nps_weight",
+    "#fz_weight",
+    "#refund_fz_weight",
+    "#sms_weight",
+    "#kr_weight",
+    "#box_weight",
+    "#ops_weight"
+  ];
+  $.each(weights, function(i, elem){
+    $(elem).on("click", function(){
+      var total = 0;
+      for (var i = 0; i < weights.length; i++) {
+        var w = $(weights[i]).val();
+        total += parseInt(w);
+      }
+    $('#total').text('Общий вес: ' + total + '% из 100%');
+    if(total === 100){
+      $("#submit").prop('disabled', false);
+      $("#validate-weight").css({'display': 'none'});
+    } else {
+      $("#submit").prop('disabled', true);
+      $("#validate-weight").css({'display': 'inline'});
+    };
+    });
+  });
+</script>
+{% endblock %}
