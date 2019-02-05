@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 85199c679aea
+Revision ID: 9ed9b045bc3e
 Revises: 
-Create Date: 2019-02-05 12:45:45.869274
+Create Date: 2019-02-05 21:14:34.011534
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '85199c679aea'
+revision = '9ed9b045bc3e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,6 +25,33 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=True)
+    op.create_table('archive_employees',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('first_name', sa.String(length=100), nullable=True),
+    sa.Column('last_name', sa.String(length=100), nullable=True),
+    sa.Column('middle_name', sa.String(length=100), nullable=True),
+    sa.Column('pos_plan', sa.Integer(), nullable=False),
+    sa.Column('pos_fact', sa.Integer(), nullable=False),
+    sa.Column('nps_plan', sa.Float(), nullable=False),
+    sa.Column('nps_fact', sa.Float(), nullable=False),
+    sa.Column('refund_fz', sa.Boolean(), nullable=False),
+    sa.Column('fz_plan', sa.Float(), nullable=False),
+    sa.Column('fz_fact', sa.Float(), nullable=False),
+    sa.Column('sms_plan', sa.Float(), nullable=False),
+    sa.Column('sms_fact', sa.Float(), nullable=False),
+    sa.Column('kr_plan', sa.Integer(), nullable=False),
+    sa.Column('kr_fact', sa.Integer(), nullable=False),
+    sa.Column('box_plan', sa.Integer(), nullable=False),
+    sa.Column('box_fact', sa.Integer(), nullable=False),
+    sa.Column('ops_plan', sa.Integer(), nullable=False),
+    sa.Column('ops_fact', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='cascade'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_archive_employees_first_name'), 'archive_employees', ['first_name'], unique=False)
+    op.create_index(op.f('ix_archive_employees_last_name'), 'archive_employees', ['last_name'], unique=False)
+    op.create_index(op.f('ix_archive_employees_middle_name'), 'archive_employees', ['middle_name'], unique=False)
     op.create_table('employees',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(length=100), nullable=True),
@@ -46,7 +73,7 @@ def upgrade():
     sa.Column('ops_plan', sa.Integer(), nullable=False),
     sa.Column('ops_fact', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='cascade'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_employees_first_name'), 'employees', ['first_name'], unique=False)
@@ -64,13 +91,13 @@ def upgrade():
     sa.Column('ops_weight', sa.Integer(), nullable=False),
     sa.Column('date', sa.DateTime(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='cascade'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('association',
     sa.Column('employee', sa.Integer(), nullable=False),
     sa.Column('rating', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['employee'], ['employees.id'], ondelete='cascade'),
+    sa.ForeignKeyConstraint(['employee'], ['archive_employees.id'], ondelete='cascade'),
     sa.ForeignKeyConstraint(['rating'], ['ratings.id'], ondelete='cascade'),
     sa.PrimaryKeyConstraint('employee', 'rating')
     )
@@ -85,6 +112,10 @@ def downgrade():
     op.drop_index(op.f('ix_employees_last_name'), table_name='employees')
     op.drop_index(op.f('ix_employees_first_name'), table_name='employees')
     op.drop_table('employees')
+    op.drop_index(op.f('ix_archive_employees_middle_name'), table_name='archive_employees')
+    op.drop_index(op.f('ix_archive_employees_last_name'), table_name='archive_employees')
+    op.drop_index(op.f('ix_archive_employees_first_name'), table_name='archive_employees')
+    op.drop_table('archive_employees')
     op.drop_index(op.f('ix_users_username'), table_name='users')
     op.drop_table('users')
     # ### end Alembic commands ###

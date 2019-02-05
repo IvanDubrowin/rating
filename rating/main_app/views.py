@@ -1,7 +1,7 @@
 from flask import render_template, redirect, session, url_for, request, g, jsonify
 from flask_login import login_required, login_user, logout_user, current_user
 from main_app import app, db
-from .models import User, CS, Rating
+from .models import User, CS, Rating, ArchiveCS
 from .forms import LoginForm, RegistrationForm, AddCSForm, CreateRatingForm
 
 @app.route('/')
@@ -119,6 +119,7 @@ def create_rating():
         ]
     if form.validate_on_submit():
         employees = [CS.query.filter_by(id=cs).first() for cs in form.employees_choices.data]
+        archive_employees = [ArchiveCS.create(**cs.serialize) for cs in employees]
         rating = Rating.create(
             pos_weight=form.pos_weight.data,
             nps_weight=form.nps_weight.data,
@@ -129,7 +130,7 @@ def create_rating():
             box_weight=form.box_weight.data,
             ops_weight=form.ops_weight.data,
             user_id=current_user.get_id(),
-            employees=employees)
+            employees=archive_employees)
         return redirect(url_for('rating', id=rating.id))
     return render_template('create_rating.html', form=form)
 
@@ -138,5 +139,6 @@ def create_rating():
 def rating(id):
     rating = Rating.query.filter_by(id=id, user_id=current_user.get_id()).first()
     if rating is not None:
+        #cs = CS.query.filter_by(rating_id=id).all()
         return render_template('rating.html')
     return redirect(url_for('index'))

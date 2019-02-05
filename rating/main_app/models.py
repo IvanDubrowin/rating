@@ -35,7 +35,7 @@ class CRUDMixin():
 
 
 class Association(db.Model, CRUDMixin):
-    employee = db.Column(db.Integer, db.ForeignKey('employees.id', ondelete='cascade'), primary_key=True)
+    employee = db.Column(db.Integer, db.ForeignKey('archive_employees.id', ondelete='cascade'), primary_key=True)
     rating = db.Column(db.Integer, db.ForeignKey('ratings.id', ondelete='cascade'), primary_key=True)
 
 
@@ -46,6 +46,8 @@ class User(db.Model, UserMixin, CRUDMixin):
     username = db.Column(db.String(30), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     cs = db.relationship('CS', backref='user', lazy=True)
+    archive_cs = db.relationship('ArchiveCS', backref='user', lazy=True)
+    rating = db.relationship('Rating', backref='user', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -84,11 +86,53 @@ class CS(db.Model, CRUDMixin):
     box_fact = db.Column(db.Integer, nullable=False)
     ops_plan = db.Column(db.Integer, nullable=False)
     ops_fact = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    rating_id = db.relationship('Rating', secondary='association', back_populates='employees')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'), nullable=False)
 
     def __repr__(self):
         return f'{self.last_name} {self.first_name} {self.middle_name}'
+
+    @property
+    def fio(self):
+        return f'{self.last_name} {self.first_name} {self.middle_name}'
+
+    @property
+    def serialize(self):
+        return {'first_name': self.first_name, 'last_name': self.last_name,
+                'middle_name': self.middle_name, 'pos_plan': self.pos_plan,
+                'pos_fact': self.pos_fact, 'nps_plan': self.nps_plan,
+                'nps_fact': self.nps_fact, 'refund_fz': self.refund_fz,
+                'fz_plan': self.fz_plan, 'fz_fact': self.fz_fact,
+                'sms_plan': self.sms_plan, 'sms_fact': self.sms_fact,
+                'kr_plan': self.kr_plan, 'kr_fact': self.kr_fact,
+                'box_plan': self.box_plan, 'box_fact': self.box_fact,
+                'ops_plan': self.ops_plan, 'ops_fact': self.ops_fact,
+                'user_id': self.user_id}
+
+
+class ArchiveCS(db.Model, CRUDMixin):
+    __tablename__ = 'archive_employees'
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100), unique=False, index=True)
+    last_name = db.Column(db.String(100), unique=False, index=True)
+    middle_name = db.Column(db.String(100), unique=False, index=True)
+    pos_plan = db.Column(db.Integer, nullable=False)
+    pos_fact = db.Column(db.Integer, nullable=False)
+    nps_plan = db.Column(db.Float, nullable=False)
+    nps_fact = db.Column(db.Float, nullable=False)
+    refund_fz = db.Column(db.Boolean, nullable=False)
+    fz_plan = db.Column(db.Float, nullable=False)
+    fz_fact = db.Column(db.Float, nullable=False)
+    sms_plan = db.Column(db.Float, nullable=False)
+    sms_fact = db.Column(db.Float, nullable=False)
+    kr_plan = db.Column(db.Integer, nullable=False)
+    kr_fact = db.Column(db.Integer, nullable=False)
+    box_plan = db.Column(db.Integer, nullable=False)
+    box_fact = db.Column(db.Integer, nullable=False)
+    ops_plan = db.Column(db.Integer, nullable=False)
+    ops_fact = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'), nullable=False)
+    rating_id = db.relationship('Rating', secondary='association', back_populates='employees')
 
     @property
     def pos_ratio(self):
@@ -181,5 +225,5 @@ class Rating(db.Model, CRUDMixin):
     box_weight = db.Column(db.Integer, nullable=False)
     ops_weight = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    employees = db.relationship('CS', secondary='association', back_populates='rating_id')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'), nullable=False)
+    employees = db.relationship('ArchiveCS', secondary='association', back_populates='rating_id')
