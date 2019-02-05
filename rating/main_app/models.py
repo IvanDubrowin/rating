@@ -212,7 +212,7 @@ class ArchiveCS(db.Model, CRUDMixin):
                 self.fz_ratio*fz_weight+self.refund_fz_ratio*refund_fz_weight+\
                 self.sms_ratio*sms_weight+self.kr_ratio*kr_weight+\
                 self.box_ratio*box_weight+self.ops_ratio*ops_weight
-        ratio = round(ratio, 2)
+        ratio = round(ratio/100, 2)
         return ratio
 
 

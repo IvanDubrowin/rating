@@ -127,3 +127,9 @@ input[type=submit] {
 .pagination li.active {
   background: #00796b;
 }
+
+#rating-table th, td {
+  border-style: solid;
+  border-width: 0 1px 1px 0;
+  border-color: white;
+}
