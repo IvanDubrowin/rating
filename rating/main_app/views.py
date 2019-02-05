@@ -137,8 +137,9 @@ def create_rating():
 @app.route('/rating/<id>', methods=['GET', 'POST'])
 @login_required
 def rating(id):
-    rating = Rating.query.filter_by(id=id, user_id=current_user.get_id()).first()
+    rating = Rating.query.join(Rating.employees).filter_by(id=id, user_id=current_user.get_id()).first()
     if rating is not None:
-        #cs = CS.query.filter_by(rating_id=id).all()
-        return render_template('rating.html')
+        weight = rating.weight_serialize
+        employees = enumerate(sorted(rating.employees, key=lambda x: x.total_ratio(**weight), reverse=True), 1)
+        return render_template('rating.html', rating=rating, weight=weight, employees=employees)
     return redirect(url_for('index'))

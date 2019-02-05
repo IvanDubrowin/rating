@@ -1,0 +1,18 @@
+{% macro rating_format(fact, plan, ratio) %}
+{% if ratio >= 100 %}
+<td style="background-color: #a5d6a7">
+  <p>{{ fact }} из {{ plan }}</p>
+  <p>План выполнен на {{ ratio }}%</p>
+</td>
+{% elif ratio >= 50%}
+<td style="background-color: #fff59d">
+  <p>{{ fact }} из {{ plan }}</p>
+  <p>План выполнен на {{ ratio }}%</p>
+</td>
+{% else %}
+<td style="background-color: #ef9a9a">
+  <p>{{ fact }} из {{ plan }}</p>
+  <p>План выполнен на {{ ratio }}%</p>
+</td>
+{% endif %}
+{% endmacro %}

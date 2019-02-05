@@ -139,18 +139,18 @@ class ArchiveCS(db.Model, CRUDMixin):
         if self.pos_plan == 0:
             return 100
         else:
-            return self.pos_fact/self.pos_plan
+            return round(100 *self.pos_fact/self.pos_plan, 2)
 
     @property
     def nps_ratio(self):
         if self.nps_plan == 0:
             return 100
         else:
-            return self.nps_fact/self.nps_plan
+            return round(100 *self.nps_fact/self.nps_plan, 2)
 
     @property
     def refund_fz_ratio(self):
-        if refund_fz is not False:
+        if self.refund_fz is False:
             return 100
         else:
             return 0
@@ -160,38 +160,41 @@ class ArchiveCS(db.Model, CRUDMixin):
         if self.fz_plan == 0:
             return 100
         else:
-            return self.fz_fact/self.fz_plan
+            return round(100 *self.fz_fact/self.fz_plan, 2)
 
     @property
     def sms_ratio(self):
         if self.sms_plan == 0:
             return 100
         else:
-            return self.sms_fact/self.sms_plan
+            return round(100 *self.sms_fact/self.sms_plan, 2)
 
     @property
     def kr_ratio(self):
         if self.kr_plan == 0:
             return 100
         else:
-            return self.kr_fact/self.kr_plan
+            return round(100 *self.kr_fact/self.kr_plan, 2)
 
     @property
     def box_ratio(self):
         if self.box_plan == 0:
             return 100
         else:
-            return self.box_fact/self.box_plan
+            return round(100 *self.box_fact/self.box_plan, 2)
 
     @property
     def ops_ratio(self):
         if self.ops_plan == 0:
             return 100
         else:
-            return self.ops_fact/self.ops_plan
+            return round(100 *self.ops_fact/self.ops_plan, 2)
 
     @property
     def fio(self):
+        return f'{self.last_name} {self.first_name} {self.middle_name}'
+
+    def __repr__(self):
         return f'{self.last_name} {self.first_name} {self.middle_name}'
 
 
@@ -209,6 +212,7 @@ class ArchiveCS(db.Model, CRUDMixin):
                 self.fz_ratio*fz_weight+self.refund_fz_ratio*refund_fz_weight+\
                 self.sms_ratio*sms_weight+self.kr_ratio*kr_weight+\
                 self.box_ratio*box_weight+self.ops_ratio*ops_weight
+        ratio = round(ratio, 2)
         return ratio
 
 
@@ -227,3 +231,15 @@ class Rating(db.Model, CRUDMixin):
     date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'), nullable=False)
     employees = db.relationship('ArchiveCS', secondary='association', back_populates='rating_id')
+
+    def __repr__(self):
+        return f'Рейтинг от {self.date}'
+
+    @property
+    def weight_serialize(self):
+        return {
+            'pos_weight': self.pos_weight, 'nps_weight': self.nps_weight,
+            'fz_weight': self.fz_weight, 'refund_fz_weight': self.refund_fz_weight,
+            'sms_weight': self.sms_weight, 'kr_weight': self.kr_weight,
+            'box_weight': self.box_weight, 'ops_weight': self.ops_weight
+        }
