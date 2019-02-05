@@ -1,3 +1,4 @@
+import datetime
 from sqlalchemy.orm import relationship, backref
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -84,7 +85,7 @@ class CS(db.Model, CRUDMixin):
     ops_plan = db.Column(db.Integer, nullable=False)
     ops_fact = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    rating = db.relationship('Rating', secondary='association', back_populates='employees')
+    rating_id = db.relationship('Rating', secondary='association', back_populates='employees')
 
     def __repr__(self):
         return f'{self.last_name} {self.first_name} {self.middle_name}'
@@ -150,6 +151,23 @@ class CS(db.Model, CRUDMixin):
         return f'{self.last_name} {self.first_name} {self.middle_name}'
 
 
+    def total_ratio(self, **kwargs):
+        pos_weight = kwargs.get('pos_weight')
+        nps_weight = kwargs.get('nps_weight')
+        fz_weight = kwargs.get('fz_weight')
+        refund_fz_weight = kwargs.get('refund_fz_weight')
+        sms_weight = kwargs.get('sms_weight')
+        kr_weight = kwargs.get('kr_weight')
+        box_weight = kwargs.get('box_weight')
+        ops_weight = kwargs.get('ops_weight')
+
+        ratio = self.pos_ratio*pos_weight+self.nps_ratio*nps_weight+\
+                self.fz_ratio*fz_weight+self.refund_fz_ratio*refund_fz_weight+\
+                self.sms_ratio*sms_weight+self.kr_ratio*kr_weight+\
+                self.box_ratio*box_weight+self.ops_ratio*ops_weight
+        return ratio
+
+
 class Rating(db.Model, CRUDMixin):
     __tablename__ = 'ratings'
 
@@ -162,5 +180,6 @@ class Rating(db.Model, CRUDMixin):
     kr_weight = db.Column(db.Integer, nullable=False)
     box_weight = db.Column(db.Integer, nullable=False)
     ops_weight = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    employees = db.relationship('CS', secondary='association', back_populates='rating')
+    employees = db.relationship('CS', secondary='association', back_populates='rating_id')
