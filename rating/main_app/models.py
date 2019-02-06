@@ -1,4 +1,4 @@
-import datetime
+import datetime, locale, sys
 from sqlalchemy.orm import relationship, backref
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -243,3 +243,14 @@ class Rating(db.Model, CRUDMixin):
             'sms_weight': self.sms_weight, 'kr_weight': self.kr_weight,
             'box_weight': self.box_weight, 'ops_weight': self.ops_weight
         }
+
+    @property
+    def format_date_(self):
+        if sys.platform == 'win32':
+            locale.setlocale(locale.LC_ALL, 'rus_rus')
+        else:
+            locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
+
+        format_ = datetime.datetime.strftime(self.date, '%d %B %Y')
+
+        return format_

@@ -39,6 +39,51 @@
         </a>
       </div>
   </div>
+  {% if items.items %}
+  <div class="employees-form">
+    <div class="row">
+      {% for item in items.items %}
+      <div class="col-sm-4">
+        <a href="{{ url_for('rating', id=item.id) }}" class="custom-card d-flex align-items-stretch">
+          <div id="rating-thumbnail" class="card" style="display: inline-block">
+            <div class="container-card">
+              <div class="card-content white-text">
+                <i class="large material-icons">insert_chart</i>
+                <p>Рейтинг от {{ item.format_date_ }}</p>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <ul class="pagination">
+          {% if items.has_prev %}
+            <li class="waves-effect"><a href="{{ url_for('index', page=items.prev_num) }}"><i class="material-icons">chevron_left</i></a></li>
+          {% endif %}
+          {% if items.pages <= 1 %}
+          {% else %}
+          {% for page_num in items.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+              {% if items.page == page_num %}
+                <li class="active"><a href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a></li>
+              {% else %}
+                <li class="waves-effect"><a href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a></li>
+              {% endif %}
+            {% else %}
+            {% endif %}
+          {% endfor %}
+          {% endif %}
+          {% if items.has_next %}
+            <li class="waves-effect"><a href="{{ url_for('index', page=items.next_num) }}"><i class="material-icons">chevron_right</i></a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 </div>
   <script type="text/javascript">
       $(document).ready(function() {

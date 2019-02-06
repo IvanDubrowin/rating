@@ -20,7 +20,7 @@
 }
 
 #menu-cards {
-  margin:0 50px 0 50px;
+  margin:0 50px 50px 50px;
 }
 
 a.custom-card,
@@ -132,4 +132,16 @@ input[type=submit] {
   border-style: solid;
   border-width: 0 1px 1px 0;
   border-color: white;
+}
+
+#rating-thumbnail {
+  background-color: #fafafa;
+}
+
+#rating-thumbnail i{
+  color: black;
+}
+
+#rating-thumbnail p{
+  color: black;
 }

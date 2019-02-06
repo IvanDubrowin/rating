@@ -83,7 +83,7 @@
     <div class="col s12">
       <ul class="pagination">
         {% if items.has_prev %}
-          <li class="waves-effect"><a href="{{ url_for('employees', page=items.has_prev) }}"><i class="material-icons">chevron_left</i></a></li>
+          <li class="waves-effect"><a href="{{ url_for('employees', page=items.prev_num) }}"><i class="material-icons">chevron_left</i></a></li>
         {% endif %}
         {% if items.pages <= 1 %}
         {% else %}
@@ -99,7 +99,7 @@
         {% endfor %}
         {% endif %}
         {% if items.has_next %}
-          <li class="waves-effect"><a href="{{ url_for('employees', page=items.has_next) }}"><i class="material-icons">chevron_right</i></a></li>
+          <li class="waves-effect"><a href="{{ url_for('employees', page=items.next_num) }}"><i class="material-icons">chevron_right</i></a></li>
         {% endif %}
       </ul>
     </div>

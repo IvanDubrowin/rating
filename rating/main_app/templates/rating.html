@@ -4,34 +4,39 @@
 {% block content %}
 <div class="employees-form">
   <div class="row">
+    <div class="col s4">
+      <h5><b>Рейтинг от {{ rating.format_date_ }}</b></h5>
+    </div>
+  </div>
+  <div class="row">
     <div class="col s12">
       <table id="rating-table" class="centered">
         <thead>
           <tr>
               <th>Место в рейтинге</th>
               <th>ФИО</th>
-              {% if rating.pos_weight > 0 %}
+              {% if rating.pos_weight != 0 %}
               <th>POS</th>
               {% endif %}
-              {% if rating.nps_weight > 0 %}
+              {% if rating.nps_weight != 0 %}
               <th>NPS</th>
               {% endif %}
-              {% if rating.refund_fz_weight > 0 %}
+              {% if rating.refund_fz_weight != 0 %}
               <th>Отказы от ФЗ</th>
               {% endif %}
-              {% if rating.fz_weight > 0 %}
+              {% if rating.fz_weight != 0 %}
               <th>ФЗ</th>
               {% endif %}
-              {% if rating.sms_weight > 0 %}
+              {% if rating.sms_weight != 0 %}
               <th>SMS</th>
               {% endif %}
-              {% if rating.kr_weight > 0 %}
+              {% if rating.kr_weight != 0 %}
               <th>Карта Свобода</th>
               {% endif %}
-              {% if rating.box_weight > 0 %}
+              {% if rating.box_weight != 0 %}
               <th>BOX</th>
               {% endif %}
-              {% if rating.ops_weight > 0 %}
+              {% if rating.ops_weight != 0 %}
               <th>ОПС</th>
               {% endif %}
               <th>Общий % выполнения плана</th>
@@ -61,19 +66,19 @@
               </td>
               {% endif %}
             {% endif %}
-            {% if rating.fz_weight > 0 %}
+            {% if rating.fz_weight != 0 %}
               {{ rating_format(cs[1].fz_fact, cs[1].fz_plan, cs[1].fz_ratio) }}
             {% endif %}
-            {% if rating.sms_weight > 0 %}
+            {% if rating.sms_weight != 0 %}
               {{ rating_format(cs[1].sms_fact, cs[1].sms_plan, cs[1].sms_ratio) }}
             {% endif %}
-            {% if rating.kr_weight > 0 %}
+            {% if rating.kr_weight != 0 %}
               {{ rating_format(cs[1].kr_fact, cs[1].kr_plan, cs[1].kr_ratio) }}
             {% endif %}
-            {% if rating.box_weight > 0 %}
+            {% if rating.box_weight != 0 %}
               {{ rating_format(cs[1].box_fact, cs[1].box_plan, cs[1].box_ratio) }}
             {% endif %}
-            {% if rating.ops_weight > 0 %}
+            {% if rating.ops_weight != 0 %}
               {{ rating_format(cs[1].ops_fact, cs[1].ops_plan, cs[1].ops_ratio) }}
             {% endif %}
             {% if cs[1].total_ratio(**weight) >= 100 %}

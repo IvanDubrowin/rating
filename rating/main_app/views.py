@@ -8,7 +8,11 @@ from .forms import LoginForm, RegistrationForm, AddCSForm, CreateRatingForm
 def index():
     if g.user is None or not g.user.is_authenticated:
         return redirect('login')
-    return render_template("index.html")
+    else:
+        page = request.args.get('page', 1, type=int)
+        ratings = Rating.query.filter_by(user_id=current_user.get_id()).\
+                paginate(page=page, per_page=6)
+        return render_template("index.html", items=ratings)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -109,6 +113,13 @@ def delete_cs():
     cs = CS.query.get_or_404(id)
     cs.delete()
     return jsonify(status="success")
+
+@app.route('/rating/delete_rating/<id>', methods=['POST'])
+@login_required
+def delete_rating(id):
+    rating = Rating.query.get_or_404(id)
+    rating.delete()
+    return redirect('index')
 
 @app.route('/create_rating', methods=['GET', 'POST'])
 @login_required
