@@ -47,13 +47,13 @@
           <tr>
             <td><b>{{ cs[0] }}</b></td>
             <td><b>{{ cs[1].fio }}</b></td>
-            {% if rating.pos_weight > 0 %}
+            {% if rating.pos_weight != 0 %}
               {{ rating_format(cs[1].pos_fact, cs[1].pos_plan, cs[1].pos_ratio) }}
             {% endif %}
-            {% if rating.nps_weight > 0 %}
+            {% if rating.nps_weight != 0 %}
               {{ rating_format(cs[1].nps_fact, cs[1].nps_plan, cs[1].nps_ratio) }}
             {% endif %}
-            {% if rating.refund_fz_weight > 0 %}
+            {% if rating.refund_fz_weight != 0 %}
               {% if cs[1].refund_fz == True %}
               <td style="background-color: #ef9a9a">
                 <p>Да</p>
