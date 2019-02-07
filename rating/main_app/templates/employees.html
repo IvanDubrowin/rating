@@ -24,7 +24,7 @@
           {% for item in items.items %}
           <tr id="row_{{ item.id }}">
             <td>{{ item.last_name }} {{ item.first_name }} {{ item.middle_name }}</td>
-            <td>{{ item.pos_fact }} из {{ item.pos_plan }}</td>
+            <td>{{ item.pretty_format(item.pos_fact) }} из {{ item.pretty_format(item.pos_plan) }}</td>
             <td>{{ item.nps_fact }}% из {{ item.nps_plan }}%</td>
             <td>{% if item.refund_fz == True %}
                   Да

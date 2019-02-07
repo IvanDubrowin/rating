@@ -27,6 +27,7 @@ migrate = Migrate(app, db)
 def before_request():
     g.user = current_user
 
+
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 

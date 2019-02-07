@@ -125,5 +125,18 @@
     }
   })
 });
+function prettify (num) {
+    var n = num.toString();
+    var separator = " ";
+    return n.replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + separator);
+}
+
+var pos_plan = $("#pos_plan");
+var pos_fact = $("#pos_fact");
+var val_pos_plan = pos_plan.prop("value");
+var val_pos_fact = pos_fact.prop("value");
+pos_plan.prop("value", prettify(val_pos_plan));
+pos_fact.prop("value", prettify(val_pos_fact));
+
 </script>
 {% endblock %}

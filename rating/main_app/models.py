@@ -108,6 +108,11 @@ class CS(db.Model, CRUDMixin):
                 'ops_plan': self.ops_plan, 'ops_fact': self.ops_fact,
                 'user_id': self.user_id}
 
+    def pretty_format(self, num):
+        locale.setlocale(locale.LC_ALL, '')
+        locale._override_localeconv = {'mon_thousands_sep': ' '}
+        return locale.format('%.0f', num, grouping=True)
+
 
 class ArchiveCS(db.Model, CRUDMixin):
     __tablename__ = 'archive_employees'
@@ -197,6 +202,10 @@ class ArchiveCS(db.Model, CRUDMixin):
     def __repr__(self):
         return f'{self.last_name} {self.first_name} {self.middle_name}'
 
+    def pretty_format(self, num):
+        locale.setlocale(locale.LC_ALL, '')
+        locale._override_localeconv = {'mon_thousands_sep': ' '}
+        return locale.format('%.0f', num, grouping=True)
 
     def total_ratio(self, **kwargs):
         pos_weight = kwargs.get('pos_weight')

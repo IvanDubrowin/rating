@@ -145,3 +145,17 @@ input[type=submit] {
 #rating-thumbnail p{
   color: black;
 }
+
+#delete-raiting {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  text-align: center;
+}
+
+#delete-raiting:hover {
+  color: black;
+  text-decoration: none;
+}

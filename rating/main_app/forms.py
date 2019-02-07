@@ -7,6 +7,28 @@ from wtforms.fields.html5 import IntegerRangeField
 from .models import User
 from main_app import db
 
+
+class CommaFloatField(FloatField):
+    def process_formdata(self, valuelist):
+        if valuelist:
+            try:
+                self.data = float(valuelist[0].replace(",", "."))
+            except ValueError:
+                self.data = None
+                raise ValueError(self.gettext('Вы ввели некорректное значение'))
+
+
+class JoinIntegerField(IntegerField):
+    def process_formdata(self, valuelist):
+        if valuelist:
+            try:
+                self.data = valuelist[0].split(' ')
+                self.data = int(''.join(self.data))
+            except ValueError:
+                self.data = None
+                raise ValueError(self.gettext('Вы ввели некорректное значение'))
+
+
 class CorrectRequired(Required):
     def __call__(self, form, field):
         if field.data is None or isinstance(field.data, string_types) and not field.data.strip():
@@ -78,29 +100,27 @@ class AddCSForm(FlaskForm):
     middle_name = StringField('Отчество',validators=[InputRequired(''),
                              Length(1, 100)],
                              render_kw={"class": "validate"})
-    pos_plan = IntegerField('POS план',validators=[CorrectRequired(),
-                             NumberRange(min=0, message='Вы ввели некорректное значение')],
+    pos_plan = JoinIntegerField('POS план',validators=[CorrectRequired()],
                              render_kw={"class": "validate"})
-    pos_fact = IntegerField('POS факт',validators=[CorrectRequired(),
-                             NumberRange(min=0, message='Вы ввели некорректное значение')],
+    pos_fact = JoinIntegerField('POS факт',validators=[CorrectRequired()],
                              render_kw={"class": "validate"})
-    nps_plan = FloatField('NPS план',validators=[CorrectRequired(),
+    nps_plan = CommaFloatField('NPS план',validators=[CorrectRequired(),
                              NumberRange(min=0.00, message='Вы ввели некорректное значение')],
                              render_kw={"class": "validate"})
-    nps_fact = FloatField('NPS факт',validators=[CorrectRequired(),
+    nps_fact = CommaFloatField('NPS факт',validators=[CorrectRequired(),
                              NumberRange(min=0, message='Вы ввели некорректное значение')],
                              render_kw={"class": "validate"})
     refund_fz = BooleanField()
-    fz_plan = FloatField('ФЗ план',validators=[CorrectRequired(),
+    fz_plan = CommaFloatField('ФЗ план',validators=[CorrectRequired(),
                              NumberRange(min=0.00, message='Вы ввели некорректное значение')],
                              render_kw={"class": "validate"})
-    fz_fact = FloatField('ФЗ факт',validators=[CorrectRequired(),
+    fz_fact = CommaFloatField('ФЗ факт',validators=[CorrectRequired(),
                              NumberRange(min=0, message='Вы ввели некорректное значение')],
                              render_kw={"class": "validate"})
-    sms_plan = FloatField('SMS план',validators=[CorrectRequired(),
+    sms_plan = CommaFloatField('SMS план',validators=[CorrectRequired(),
                              NumberRange(min=0.00, message='Вы ввели некорректное значение')],
                              render_kw={"class": "validate"})
-    sms_fact = FloatField('SMS факт',validators=[CorrectRequired(),
+    sms_fact = CommaFloatField('SMS факт',validators=[CorrectRequired(),
                              NumberRange(min=0, message='Вы ввели некорректное значение')],
                              render_kw={"class": "validate"})
     kr_plan = IntegerField('Карта Свобода план',validators=[CorrectRequired(),

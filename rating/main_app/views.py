@@ -114,12 +114,13 @@ def delete_cs():
     cs.delete()
     return jsonify(status="success")
 
-@app.route('/rating/delete_rating/<id>', methods=['POST'])
+@app.route('/rating/delete_rating/<id>', methods=['GET', 'POST'])
 @login_required
 def delete_rating(id):
-    rating = Rating.query.get_or_404(id)
-    rating.delete()
-    return redirect('index')
+    rating = Rating.query.filter_by(id=id, user_id=current_user.get_id()).first()
+    if rating is not None:
+        rating.delete()
+    return redirect(url_for('index'))
 
 @app.route('/create_rating', methods=['GET', 'POST'])
 @login_required

@@ -125,5 +125,22 @@
     }
   })
 });
+
+function numberWithSpaces(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+var fields = [
+  '#pos_plan',
+  '#pos_fact'
+]
+
+$.each(fields, function(i, elem){
+  $("input").keyup(function() {
+    var selector = $(elem);
+    var new_val = selector.prop("value").split(' ').join('');
+      selector.prop("value", numberWithSpaces(new_val));
+    }).keyup();
+});
 </script>
 {% endblock %}

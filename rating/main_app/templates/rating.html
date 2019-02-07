@@ -48,10 +48,10 @@
             <td><b>{{ cs[0] }}</b></td>
             <td><b>{{ cs[1].fio }}</b></td>
             {% if rating.pos_weight != 0 %}
-              {{ rating_format(cs[1].pos_fact, cs[1].pos_plan, cs[1].pos_ratio) }}
+              {{ rating_format(cs[1].pretty_format(cs[1].pos_fact), cs[1].pretty_format(cs[1].pos_plan), cs[1].pos_ratio) }}
             {% endif %}
             {% if rating.nps_weight != 0 %}
-              {{ rating_format(cs[1].nps_fact, cs[1].nps_plan, cs[1].nps_ratio) }}
+              {{ rating_format("%.2f"|format(cs[1].nps_fact), "%.2f"|format(cs[1].nps_plan), cs[1].nps_ratio) }}
             {% endif %}
             {% if rating.refund_fz_weight != 0 %}
               {% if cs[1].refund_fz == True %}
@@ -67,10 +67,10 @@
               {% endif %}
             {% endif %}
             {% if rating.fz_weight != 0 %}
-              {{ rating_format(cs[1].fz_fact, cs[1].fz_plan, cs[1].fz_ratio) }}
+              {{ rating_format("%.2f"|format(cs[1].fz_fact), "%.2f"|format(cs[1].fz_plan), cs[1].fz_ratio) }}
             {% endif %}
             {% if rating.sms_weight != 0 %}
-              {{ rating_format(cs[1].sms_fact, cs[1].sms_plan, cs[1].sms_ratio) }}
+              {{ rating_format("%.2f"|format(cs[1].sms_fact), "%.2f"|format(cs[1].sms_plan), cs[1].sms_ratio) }}
             {% endif %}
             {% if rating.kr_weight != 0 %}
               {{ rating_format(cs[1].kr_fact, cs[1].kr_plan, cs[1].kr_ratio) }}
@@ -98,6 +98,17 @@
           {% endfor %}
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-2">
+    </div>
+    <div class="col-md-auto">
+      <a id="delete-raiting" href="{{ url_for('delete_rating', id=rating.id) }}" class="btn-large waves-effect waves-light red"><i class="material-icons">delete</i>Удалить</a>
+    </div>
+    <div class="col col-lg-2">
     </div>
   </div>
 </div>
