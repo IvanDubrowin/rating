@@ -1,8 +1,8 @@
-import xlsxwriter
-from flask import render_template, redirect, session, url_for, request, g, jsonify
+import os, xlsxwriter
+from flask import render_template, redirect, url_for, request, g, jsonify, send_file
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_weasyprint import HTML, render_pdf
-from main_app import app, db
+from main_app import app, db, basedir
 from .models import User, CS, Rating, ArchiveCS
 from .forms import LoginForm, RegistrationForm, AddCSForm, CreateRatingForm
 
@@ -205,7 +205,9 @@ def to_excel(id):
         rows = [employee_row(emp) for emp in employees]
         row = 0
         col = 0
-        workbook = xlsxwriter.Workbook(f'{rating.format_date_}.xlsx')
+        file = f'{rating.format_date_}.xlsx'
+        path = os.path.join(basedir, file)
+        workbook = xlsxwriter.Workbook(path)
         worksheet = workbook.add_worksheet()
 
         for title in title_row:
@@ -220,4 +222,5 @@ def to_excel(id):
                 col += 1
             row += 1
         workbook.close()
+        return send_file(path)
     return redirect(url_for('index'))
