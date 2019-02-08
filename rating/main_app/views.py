@@ -177,10 +177,16 @@ def to_excel(id):
     if rating is not None:
         weight = rating.weight_serialize
         employees = list(enumerate(sorted(rating.employees, key=lambda x: x.total_ratio(**weight), reverse=True), 1))
-        title_row = ['Место в рейтинге', 'ФИО', 'POS',
-                     'NPS', 'Отказы от ФЗ', 'ФЗ', 'SMS',
-                     'Карта Свобода', 'BOX', 'ОПС',
-                     'Общий % выполнения плана']
+        row = 0
+        col = 0
+        title_row = ['Место в рейтинге', 'ФИО', 'POS', '%',
+                     'NPS', '%', 'Отказы от ФЗ', '%',
+                     'ФЗ', '%', 'SMS', '%',
+                     'Карта Свобода', '%', 'BOX', '%',
+                     'ОПС', '%', 'Общий % выполнения плана']
+
+        format_cols = ['D', 'F', 'H', 'J', 'L', 'N', 'P', 'R', 'S']
+
 
         def employee_row(emp):
             def ref_fz_val(val):
@@ -191,27 +197,35 @@ def to_excel(id):
             row = [
                 emp[0],
                 emp[1].fio,
-                f'{emp[1].pretty_format(emp[1].pos_fact)} из {emp[1].pretty_format(emp[1].pos_plan)} План выполнен на {emp[1].pos_ratio}%',
-                f'{emp[1].nps_fact} из {emp[1].nps_plan} План выполнен на {emp[1].nps_ratio}%',
-                f'{ref_fz_val(emp[1].refund_fz)} План выполнен на {emp[1].refund_fz_ratio}%',
-                f'{emp[1].nps_fact} из {emp[1].nps_plan} План выполнен на {emp[1].nps_ratio}%',
-                f'{emp[1].fz_fact} из {emp[1].fz_plan} План выполнен на {emp[1].fz_ratio}%',
-                f'{emp[1].sms_fact} из {emp[1].sms_plan} План выполнен на {emp[1].sms_ratio}%',
-                f'{emp[1].kr_fact} из {emp[1].kr_plan} План выполнен на {emp[1].kr_ratio}%',
-                f'{emp[1].box_fact} из {emp[1].box_plan} План выполнен на {emp[1].box_ratio}%',
-                f'{emp[1].ops_fact} из {emp[1].ops_plan} План выполнен на {emp[1].ops_ratio}%',
+                f'{emp[1].pretty_format(emp[1].pos_fact)} из {emp[1].pretty_format(emp[1].pos_plan)}',
+                emp[1].pos_ratio,
+                f'{emp[1].nps_fact} из {emp[1].nps_plan}',
+                emp[1].nps_ratio,
+                f'{ref_fz_val(emp[1].refund_fz)}',
+                emp[1].refund_fz_ratio,
+                f'{emp[1].fz_fact} из {emp[1].fz_plan}',
+                emp[1].fz_ratio,
+                f'{emp[1].sms_fact} из {emp[1].sms_plan}',
+                emp[1].sms_ratio,
+                f'{emp[1].kr_fact} из {emp[1].kr_plan}',
+                emp[1].kr_ratio,
+                f'{emp[1].box_fact} из {emp[1].box_plan}',
+                emp[1].box_ratio,
+                f'{emp[1].ops_fact} из {emp[1].ops_plan}',
+                emp[1].ops_ratio,
                 emp[1].total_ratio(**weight)]
             return row
         rows = [employee_row(emp) for emp in employees]
-        row = 0
-        col = 0
         file = f'{rating.format_date_}.xlsx'
         path = os.path.join(basedir, file)
         workbook = xlsxwriter.Workbook(path)
         worksheet = workbook.add_worksheet()
 
+        centered = workbook.add_format({'align': 'center',
+                                        'valign': 'vcenter',
+                                        'border': 1})
         for title in title_row:
-            worksheet.write(row, col, title)
+            worksheet.write(row, col, title, centered)
             col += 1
         row = 1
         col = 0
@@ -221,6 +235,11 @@ def to_excel(id):
                 worksheet.write(row, col, v)
                 col += 1
             row += 1
+        for col in format_cols:
+            worksheet.conditional_format(f'{col}1:{col}{row}', {'type': '3_color_scale'})
+        worksheet.set_column('A:C', 35, centered)
+        worksheet.set_column('D:R', 15, centered)
+        worksheet.set_column('S:S', 30, centered)
         workbook.close()
         return send_file(path)
     return redirect(url_for('index'))
