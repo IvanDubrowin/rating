@@ -9,7 +9,6 @@ from main_app import db, views, login_manager
 def load_user(user_id):
     return User.query.get(user_id)
 
-
 class CRUDMixin():
 
     @classmethod
@@ -45,9 +44,8 @@ class User(db.Model, UserMixin, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    cs = db.relationship('CS', backref='user', lazy=True)
-    archive_cs = db.relationship('ArchiveCS', backref='user', lazy=True)
-    rating = db.relationship('Rating', backref='user', lazy=True)
+    cs = db.relationship('CS', backref='user', lazy=True, cascade="all,delete")
+    rating = db.relationship('Rating', backref='user', lazy=True, cascade="all,delete")
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -137,7 +135,7 @@ class ArchiveCS(db.Model, CRUDMixin):
     ops_plan = db.Column(db.Integer, nullable=False)
     ops_fact = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'), nullable=False)
-    rating_id = db.relationship('Rating', secondary='association', back_populates='employees')
+    rating_id = db.relationship('Rating', secondary='association', back_populates='employees', cascade="all,delete")
 
     @property
     def pos_ratio(self):
@@ -239,7 +237,7 @@ class Rating(db.Model, CRUDMixin):
     ops_weight = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'), nullable=False)
-    employees = db.relationship('ArchiveCS', secondary='association', back_populates='rating_id')
+    employees = db.relationship('ArchiveCS', secondary='association', back_populates='rating_id', cascade="all,delete")
 
     def __repr__(self):
         return f'Рейтинг от {self.date}'

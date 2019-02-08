@@ -1,9 +1,9 @@
-import os, xlsxwriter
+import xlsxwriter
 from io import BytesIO
 from flask import render_template, redirect, url_for, request, g, jsonify, send_file
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_weasyprint import HTML, render_pdf
-from main_app import app, db, basedir
+from main_app import app
 from .models import User, CS, Rating, ArchiveCS
 from .forms import LoginForm, RegistrationForm, AddCSForm, CreateRatingForm
 
@@ -187,7 +187,6 @@ def to_excel(id):
                      'ОПС', '%', 'Общий % выполнения плана']
 
         format_cols = ['D', 'F', 'H', 'J', 'L', 'N', 'P', 'R', 'S']
-
 
         def employee_row(emp):
             def ref_fz_val(val):

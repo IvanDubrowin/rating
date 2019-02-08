@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField, BooleanField, IntegerField, FloatField, SelectMultipleField
 from wtforms.compat import string_types
-from wtforms.validators import Email, Required, Length, Regexp, EqualTo, NumberRange, InputRequired, StopValidation
+from wtforms.validators import Required, Length, Regexp, EqualTo, NumberRange, InputRequired, StopValidation
 from wtforms import ValidationError
 from wtforms.fields.html5 import IntegerRangeField
 from .models import User
@@ -54,7 +54,6 @@ class LoginForm(FlaskForm):
         rv = FlaskForm.validate(self)
         if not rv:
             return False
-
         user = User.query.filter_by(
             username=self.username.data).first()
         if user is None:
@@ -64,7 +63,6 @@ class LoginForm(FlaskForm):
         if not user.verify_password(self.password.data):
             self.password.errors.append('Неверный пароль')
             return False
-
         self.user = user
         return True
 
@@ -163,7 +161,6 @@ class AddCSForm(FlaskForm):
             self.ops_plan,
             self.ops_fact,
         ]
-
         for field in fields:
             if not isinstance(field.data, (int, float)):
                 field.errors.append('Вы ввели некорректное значение')
@@ -185,7 +182,6 @@ class CreateRatingForm(FlaskForm):
 
     def validate(self):
         rv = FlaskForm.validate(self)
-
         if not self.employees_choices.data:
             self.employees_choices.errors.append('Необходимо добавить КС')
             return False
