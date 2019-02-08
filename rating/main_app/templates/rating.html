@@ -101,12 +101,18 @@
     </div>
   </div>
 </div>
-<div class="container">
+<div class="container mb-5">
   <div class="row justify-content-md-center">
     <div class="col col-lg-2">
     </div>
     <div class="col-md-auto">
-      <a id="delete-raiting" href="{{ url_for('delete_rating', id=rating.id) }}" class="btn-large waves-effect waves-light red"><i class="material-icons">delete</i>Удалить</a>
+      <a id="button-raiting" href="{{ url_for('to_pdf', id=rating.id) }}"class="btn-large waves-effect waves-light green"><i class="material-icons">picture_as_pdf</i>Создать PDF файл</a>
+    </div>
+    <div class="col-md-auto">
+      <a id="button-raiting" href="{{ url_for('to_excel', id=rating.id) }}"class="btn-large waves-effect waves-light green"><i class="material-icons">description</i>Создать Excel файл</a>
+    </div>
+    <div class="col-md-auto">
+      <a id="button-raiting" href="{{ url_for('delete_rating', id=rating.id) }}" class="btn-large waves-effect waves-light red"><i class="material-icons">delete</i>Удалить</a>
     </div>
     <div class="col col-lg-2">
     </div>

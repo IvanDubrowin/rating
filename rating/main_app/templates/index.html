@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <div id="menu-cards" class="row">
-      <div class="col-lg-4 d-flex">
-        <a href="{{ url_for('employees') }}" class="custom-card d-flex align-items-stretch">
+  <div id="menu-cards" class="row justify-content-center">
+      <div class="col-lg-4">
+        <a href="{{ url_for('employees') }}" class="custom-card">
           <div class="card blue-grey darken-1" style="display: inline-block">
             <div class="container-card">
               <div class="card-content white-text">
@@ -14,8 +14,8 @@
           </div>
         </a>
       </div>
-      <div class="col-lg-4 d-flex">
-        <a href="{{ url_for('create_rating') }}" class="custom-card d-flex align-items-stretch">
+      <div class="col-lg-4">
+        <a href="{{ url_for('create_rating') }}" class="custom-card">
           <div class="card blue-grey darken-1" style="display: inline-block">
             <div class="container-card">
               <div class="card-content white-text">
@@ -26,27 +26,14 @@
           </div>
         </a>
       </div>
-      <div class="col-lg-4 d-flex">
-        <a href="" class="custom-card d-flex align-items-stretch">
-          <div class="card blue-grey darken-1" style="display: inline-block">
-            <div class="container-card">
-              <div class="card-content white-text">
-                <i class="large material-icons">assignment_returned</i>
-                <p>Экспорт в файл</p>
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
   </div>
   {% if items.items %}
-  <div class="employees-form">
     <div class="row">
       {% for item in items.items %}
       <div class="col-sm-4">
         <a href="{{ url_for('rating', id=item.id) }}" class="custom-card d-flex align-items-stretch">
           <div id="rating-thumbnail" class="card" style="display: inline-block">
-            <div class="container-card">
+            <div class="raiting-card">
               <div class="card-content white-text">
                 <i class="large material-icons">insert_chart</i>
                 <p>Рейтинг от {{ item.format_date_ }}</p>
@@ -82,7 +69,6 @@
         </ul>
       </div>
     </div>
-  </div>
   {% endif %}
 </div>
   <script type="text/javascript">

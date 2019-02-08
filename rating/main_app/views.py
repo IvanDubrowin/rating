@@ -1,8 +1,10 @@
 from flask import render_template, redirect, session, url_for, request, g, jsonify
 from flask_login import login_required, login_user, logout_user, current_user
+from flask_weasyprint import HTML, render_pdf
 from main_app import app, db
 from .models import User, CS, Rating, ArchiveCS
 from .forms import LoginForm, RegistrationForm, AddCSForm, CreateRatingForm
+
 
 @app.route('/')
 def index():
@@ -154,4 +156,21 @@ def rating(id):
         weight = rating.weight_serialize
         employees = enumerate(sorted(rating.employees, key=lambda x: x.total_ratio(**weight), reverse=True), 1)
         return render_template('rating.html', rating=rating, weight=weight, employees=employees)
+    return redirect(url_for('index'))
+
+@app.route('/rating/to_pdf/Рейтинг_<id>.pdf')
+@login_required
+def to_pdf(id):
+    rating = Rating.query.join(Rating.employees).filter(Rating.id == id, Rating.user_id == current_user.get_id()).first()
+    if rating is not None:
+        weight = rating.weight_serialize
+        employees = list(enumerate(sorted(rating.employees, key=lambda x: x.total_ratio(**weight), reverse=True), 1))
+        html = render_template('rating_pdf.html', rating=rating, weight=weight, employees=employees)
+        return render_pdf(HTML(string=html))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/rating/to_excel/<id>', methods=['GET', 'POST'])
+@login_required
+def to_excel(id):
     return redirect(url_for('index'))
