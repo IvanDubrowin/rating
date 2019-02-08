@@ -1,3 +1,4 @@
+import xlsxwriter
 from flask import render_template, redirect, session, url_for, request, g, jsonify
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_weasyprint import HTML, render_pdf
@@ -167,10 +168,56 @@ def to_pdf(id):
         employees = list(enumerate(sorted(rating.employees, key=lambda x: x.total_ratio(**weight), reverse=True), 1))
         html = render_template('rating_pdf.html', rating=rating, weight=weight, employees=employees)
         return render_pdf(HTML(string=html))
-    else:
-        return redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 @app.route('/rating/to_excel/<id>', methods=['GET', 'POST'])
 @login_required
 def to_excel(id):
+    rating = Rating.query.join(Rating.employees).filter(Rating.id == id, Rating.user_id == current_user.get_id()).first()
+    if rating is not None:
+        weight = rating.weight_serialize
+        employees = list(enumerate(sorted(rating.employees, key=lambda x: x.total_ratio(**weight), reverse=True), 1))
+        title_row = ['Место в рейтинге', 'ФИО', 'POS',
+                     'NPS', 'Отказы от ФЗ', 'ФЗ', 'SMS',
+                     'Карта Свобода', 'BOX', 'ОПС',
+                     'Общий % выполнения плана']
+
+        def employee_row(emp):
+            def ref_fz_val(val):
+                if val is True:
+                    return 'Да'
+                else:
+                    return 'Нет'
+            row = [
+                emp[0],
+                emp[1].fio,
+                f'{emp[1].pretty_format(emp[1].pos_fact)} из {emp[1].pretty_format(emp[1].pos_plan)} План выполнен на {emp[1].pos_ratio}%',
+                f'{emp[1].nps_fact} из {emp[1].nps_plan} План выполнен на {emp[1].nps_ratio}%',
+                f'{ref_fz_val(emp[1].refund_fz)} План выполнен на {emp[1].refund_fz_ratio}%',
+                f'{emp[1].nps_fact} из {emp[1].nps_plan} План выполнен на {emp[1].nps_ratio}%',
+                f'{emp[1].fz_fact} из {emp[1].fz_plan} План выполнен на {emp[1].fz_ratio}%',
+                f'{emp[1].sms_fact} из {emp[1].sms_plan} План выполнен на {emp[1].sms_ratio}%',
+                f'{emp[1].kr_fact} из {emp[1].kr_plan} План выполнен на {emp[1].kr_ratio}%',
+                f'{emp[1].box_fact} из {emp[1].box_plan} План выполнен на {emp[1].box_ratio}%',
+                f'{emp[1].ops_fact} из {emp[1].ops_plan} План выполнен на {emp[1].ops_ratio}%',
+                emp[1].total_ratio(**weight)]
+            return row
+        rows = [employee_row(emp) for emp in employees]
+        row = 0
+        col = 0
+        workbook = xlsxwriter.Workbook(f'{rating.format_date_}.xlsx')
+        worksheet = workbook.add_worksheet()
+
+        for title in title_row:
+            worksheet.write(row, col, title)
+            col += 1
+        row = 1
+        col = 0
+        for emp in (rows):
+            col = 0
+            for v in emp:
+                worksheet.write(row, col, v)
+                col += 1
+            row += 1
+        workbook.close()
     return redirect(url_for('index'))
