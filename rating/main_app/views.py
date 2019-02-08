@@ -1,4 +1,5 @@
 import os, xlsxwriter
+from io import BytesIO
 from flask import render_template, redirect, url_for, request, g, jsonify, send_file
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_weasyprint import HTML, render_pdf
@@ -216,9 +217,8 @@ def to_excel(id):
                 emp[1].total_ratio(**weight)]
             return row
         rows = [employee_row(emp) for emp in employees]
-        file = f'{rating.format_date_}.xlsx'
-        path = os.path.join(basedir, file)
-        workbook = xlsxwriter.Workbook(path)
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output)
         worksheet = workbook.add_worksheet()
 
         centered = workbook.add_format({'align': 'center',
@@ -241,5 +241,6 @@ def to_excel(id):
         worksheet.set_column('D:R', 15, centered)
         worksheet.set_column('S:S', 30, centered)
         workbook.close()
-        return send_file(path)
+        output.seek(0)
+        return send_file(output, attachment_filename=f'{rating.format_date_}.xlsx', as_attachment=True)
     return redirect(url_for('index'))
