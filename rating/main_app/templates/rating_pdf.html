@@ -5,11 +5,12 @@
 	<title>Рейтинг</title>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style_pdf.css') }}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 	<style>
 		@media print {
 			@page {
 				width: 35cm;
-        height: {{ employees|length*2.7 }}cm;
+        height: {{ employees|length*2.7+2 }}cm;
         margin: 5mm 5mm 5mm 5mm;
 			}
 		}
