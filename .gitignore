@@ -1,2 +1,4 @@
 
 rating/main_app/__pycache__/
+
+*.db
