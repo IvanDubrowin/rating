@@ -137,6 +137,10 @@ input[type=submit] {
   border-color: white;
 }
 
+#rating-table p {
+  font-size: 13px;
+}
+
 #rating-thumbnail {
   background-color: #fafafa;
 }

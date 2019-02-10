@@ -10,7 +10,7 @@
 		@media print {
 			@page {
 				width: 35cm;
-        height: {{ employees|length*2.7+2 }}cm;
+        height: {{ employees|length*3+2 }}cm;
         margin: 5mm 5mm 5mm 5mm;
 			}
 		}
@@ -67,13 +67,13 @@
                   {% if rating.refund_fz_weight != 0 %}
                     {% if cs[1].refund_fz == True %}
                     <td style="background-color: #ef9a9a">
-                      <p>Да</p>
-                      <p>План выполнен на {{ cs[1].refund_fz_ratio}}%</p>
+                      <p><b>Да</b></p>
+                      <p><b>План выполнен на {{ cs[1].refund_fz_ratio}}%</b></p>
                     </td>
                     {% else %}
                     <td style="background-color: #a5d6a7">
-                      <p>Нет</p>
-                      <p>План выполнен на {{ cs[1].refund_fz_ratio}}%</p>
+											<p><b>Нет</b></p>
+											<p><b>План выполнен на {{ cs[1].refund_fz_ratio}}%</b></p>
                     </td>
                     {% endif %}
                   {% endif %}
@@ -93,17 +93,17 @@
                     {{ rating_format(cs[1].ops_fact, cs[1].ops_plan, cs[1].ops_ratio) }}
                   {% endif %}
                   {% if cs[1].total_ratio(**weight) >= 100 %}
-                  <td style="background-color: #a5d6a7">
-                    {{ cs[1].total_ratio(**weight) }}%
-                  </td>
-                  {% elif cs[1].total_ratio(**weight) >= 50%}
-                  <td style="background-color: #fff59d">
-                    {{ cs[1].total_ratio(**weight) }}%
-                  </td>
-                  {% else %}
-                  <td style="background-color: #ef9a9a">
-                    {{ cs[1].total_ratio(**weight) }}%
-                  </td>
+									<td style="background-color: #a5d6a7">
+			              <b>{{ cs[1].total_ratio(**weight) }}%</b>
+			            </td>
+			            {% elif cs[1].total_ratio(**weight) >= 50%}
+			            <td style="background-color: #fff59d">
+			              <b>{{ cs[1].total_ratio(**weight) }}%</b>
+			            </td>
+			            {% else %}
+			            <td style="background-color: #ef9a9a">
+			              <b>{{ cs[1].total_ratio(**weight) }}%</b>
+			            </td>
                   {% endif %}
                 </tr>
                 {% endfor %}
